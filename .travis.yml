@@ -20,5 +20,6 @@ install:
   - source activate gi-data
 
 script:
-  - cd GIData && python setup.py && cd ..
+  - cd GIData && python setup.py develop && cd ..
+  - pwd
   - snakemake -d datasets/collins_et_al -s datasets/collins_et_al/Snakefile
