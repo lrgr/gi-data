@@ -1,0 +1,16 @@
+name: 'gi-data'
+channels:
+  - defaults
+  - bioconda
+dependencies:
+  - python == 3.*
+  - pip
+  - snakemake
+  - pytest
+  - twine
+  - click
+  - numpy
+  - pandas
+  - cloudpickle
+  - pip:
+    - chacon

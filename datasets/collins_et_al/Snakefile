@@ -1,0 +1,41 @@
+from os.path import join
+
+DATA_URL = 'https://www.nature.com/nature/journal/v446/n7137/extref/nature05649-s2.zip'
+
+OUTPUT_DIR = 'output'
+RAW_DIR = join(OUTPUT_DIR, 'raw')
+RAW_DATA_ZIP = join(RAW_DIR,'collins2007_raw.zip')
+RAW_SUPP_DIR = join(RAW_DIR, 'collins_et_al_s2')
+RAW_SUPP_EMAP_TSV = join(RAW_SUPP_DIR, 'Chromosome biology EMAP data.txt')
+
+PROCESSED_EMAP = join(OUTPUT_DIR, 'processed', 'collins_et_al-dels_only.cpkl')
+
+rule all:   
+    input:
+        tsv=RAW_SUPP_EMAP_TSV,
+        script='parse_collins.py'
+    output:
+        PROCESSED_EMAP
+    shell:
+        "python {input.script} -i '{input.tsv}' -o {output}" #todo? rename the files so spaces aren't annoying?
+
+rule unzip:
+    input:
+        RAW_DATA_ZIP
+    params:
+        unzipped_folder = "'Supp data - strains and interaction data'"
+    output:
+        RAW_SUPP_EMAP_TSV
+    shell:
+        '''
+        unzip {input} && \
+        mv {params.unzipped_folder}/* {RAW_SUPP_DIR}/. && \
+        rmdir {params.unzipped_folder}
+        '''
+rule download_raw_data:
+    params:
+        url = DATA_URL
+    output:
+        RAW_DATA_ZIP
+    shell:
+        'wget -O {output} {params.url}' 
