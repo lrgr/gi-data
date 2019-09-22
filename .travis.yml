@@ -21,5 +21,5 @@ install:
 
 script:
   - cd GIData && python setup.py develop && cd ..
-  - snakemake -d datasets/collins_et_al -s datasets/collins_et_al/Snakefile
-  - snakemake -d datasets/roguev_et_al -s datasets/roguev_et_al/Snakefile
+  - snakemake -d datasets/collins_et_al -s datasets/collins_et_al/Snakefile all
+  - snakemake -d datasets/roguev_et_al -s datasets/roguev_et_al/Snakefile all

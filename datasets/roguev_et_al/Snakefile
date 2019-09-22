@@ -4,6 +4,9 @@ DATA_URL = 'http://science.sciencemag.org/highwire/filestream/589554/field_highw
 
 OUTPUT_DIR = 'output'
 RAW_DIR = join(OUTPUT_DIR, 'raw')
+PROCESSED_DIR = join(OUTPUT_DIR, 'processed')
+
+# EMAP
 ZIP_NAME = 'roguev_et_al_s1.zip'
 
 RAW_S1_DIR = join(RAW_DIR, 'dataset_s1')
@@ -11,10 +14,9 @@ RAW_DATA_ZIP = join(RAW_DIR, ZIP_NAME)
 
 RAW_EMAP_TXT = join(RAW_S1_DIR, 'raw_data', 'Dataset_S1.txt')
 
-PROCESSED_DIR = join(OUTPUT_DIR, 'processed')
 DELETIONS_ONLY_EMAP = join(PROCESSED_DIR, 'roguev_et_al-dels_only.cpkl')
 
-rule all:
+rule emap:
     input:
         emap = RAW_EMAP_TXT,
         script = 'parse_roguev.py'
@@ -39,3 +41,70 @@ rule download_raw_data:
         RAW_DATA_ZIP
     shell:
         'wget -O {output} {params.url}'
+
+# ORTHOLOGS
+SOM_TABLES_URL = 'https://science.sciencemag.org/highwire/filestream/589554/field_highwire_adjunct_files/4/1162609sTablesS1-S8.zip'
+SOM_TABLES_ZIP_NAME = 'tables_s1-s8.zip'
+RAW_SOM_TABLES_ZIP = join(RAW_DIR, SOM_TABLES_ZIP_NAME)
+SOM_TABLES_DIR = join(RAW_DIR, 'SOM_tables')
+FUN_CAT_XLS = join(SOM_TABLES_DIR, 'Table_S4.xls')
+S4_TSV = join(PROCESSED_DIR, 'table_s4.tsv')
+
+RAW_HOMS_XLS = join(SOM_TABLES_DIR, 'Table_S3.xls')
+S3_TSV = join(PROCESSED_DIR, 'table_s3.tsv')
+HOMS_SC_SP = join(PROCESSED_DIR, 'sc-sp-homs.tsv')
+HOMS_SP_SC = join(PROCESSED_DIR, 'sp-sc-homs.tsv')
+
+rule download_som_tables:
+    params:
+        url= SOM_TABLES_URL
+    output:
+        RAW_SOM_TABLES_ZIP
+    shell:
+        'wget -O {output} {params.url}'
+
+rule unzip_som_tables:
+    input:
+        RAW_SOM_TABLES_ZIP
+    output:
+        FUN_CAT_XLS,
+        RAW_HOMS_XLS,
+    shell:
+        'pushd . && cd {SOM_TABLES_DIR} && unzip ../{SOM_TABLES_ZIP_NAME} && rm -r __MACOSX && popd'
+
+rule s4_tsv:
+    input:
+        xls=FUN_CAT_XLS,
+        script='parse_roguev_som_tables.py'
+    output:
+        S4_TSV,
+    shell:
+        'python {input.script} xls-to-csv -i {input.xls} -o {output} -c 5'
+
+rule s3_tsv:
+    input:
+        xls=RAW_HOMS_XLS,
+        script='parse_roguev_som_tables.py'
+    output:
+        S3_TSV
+    shell:
+        'python {input.script} xls-to-csv -i {input.xls} -o {output} -c 5'
+
+rule homs:
+    input:
+        tsv = S3_TSV,
+        script='parse_roguev_som_tables.py'
+    output:
+        sc_sp = HOMS_SC_SP,
+        sp_sc = HOMS_SP_SC
+    shell:
+        'python {input.script} s3-homs -i {input.tsv} --sc-sp {output.sc_sp} --sp-sc {output.sp_sc} '
+    
+# ALL:
+rule all:
+    input:
+        DELETIONS_ONLY_EMAP, 
+        HOMS_SC_SP, 
+        HOMS_SP_SC, 
+        FUN_CAT_XLS
+

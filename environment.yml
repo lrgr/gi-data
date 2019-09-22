@@ -12,6 +12,7 @@ dependencies:
   - click
   - numpy
   - pandas
+  - xlrd # excel reader
   - cloudpickle
   - pip:
     - chacon
