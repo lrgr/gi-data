@@ -12,6 +12,8 @@ class GIData(object):
                  row_meta=None,
                  col_meta=None,
                  has_duplicates=False):
+        assert all([gene.isupper() for gene in rows])
+        assert all([gene.isupper() for gene in cols])
         
         assert isinstance(values, np.ndarray), type(values)
         assert values.dtype == float, values.dtype
@@ -24,7 +26,6 @@ class GIData(object):
 
         assert len(rows.shape) == 1
         assert len(cols.shape) == 1
-
 
         self.values = values
         self.rows = rows

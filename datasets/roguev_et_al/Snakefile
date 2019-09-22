@@ -1,0 +1,41 @@
+from os.path import join
+
+DATA_URL = 'http://science.sciencemag.org/highwire/filestream/589554/field_highwire_adjunct_files/0/1162609sDataset_S1.zip'
+
+OUTPUT_DIR = 'output'
+RAW_DIR = join(OUTPUT_DIR, 'raw')
+ZIP_NAME = 'roguev_et_al_s1.zip'
+
+RAW_S1_DIR = join(RAW_DIR, 'dataset_s1')
+RAW_DATA_ZIP = join(RAW_DIR, ZIP_NAME)
+
+RAW_EMAP_TXT = join(RAW_S1_DIR, 'raw_data', 'Dataset_S1.txt')
+
+PROCESSED_DIR = join(OUTPUT_DIR, 'processed')
+DELETIONS_ONLY_EMAP = join(PROCESSED_DIR, 'roguev_et_al-dels_only.cpkl')
+
+rule all:
+    input:
+        emap = RAW_EMAP_TXT,
+        script = 'parse_roguev.py'
+    output:
+        DELETIONS_ONLY_EMAP
+    shell:
+        'python {input.script} -i {input.emap} -o {output}'
+
+rule unzip:
+    input:
+        RAW_DATA_ZIP
+    output:
+        RAW_EMAP_TXT
+    shell:
+        'pushd . && cd {RAW_S1_DIR} && unzip ../{ZIP_NAME} && rm -r __MACOSX && popd'
+
+
+rule download_raw_data:
+    params:
+        url= DATA_URL
+    output:
+        RAW_DATA_ZIP
+    shell:
+        'wget -O {output} {params.url}'

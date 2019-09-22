@@ -1,0 +1,6 @@
+- 550 unique genes
+- 536 non-essential genes deleted
+    - 1 non-essential gene also damped
+- 14 essential genes damped
+- total of 551 rows/cols in data, one gene both damped and deleted 'SPBC32F12.02'
+- ~ 21% missing

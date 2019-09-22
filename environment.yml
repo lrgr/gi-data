@@ -1,11 +1,12 @@
 name: 'gi-data'
 channels:
-  - defaults
   - bioconda
+  - conda-forge
+  - defaults
 dependencies:
-  - python == 3.*
+  - python >= 3
   - pip
-  - snakemake
+  - snakemake >= 5.6
   - pytest
   - twine
   - click
