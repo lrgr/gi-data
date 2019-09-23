@@ -16,7 +16,7 @@ PROCESSED_FUNCATS = join(PROCESSED_DIR, 'collins_et_al_gene_annotations.tsv')
 rule all:
     input:
         PROCESSED_EMAP,
-        RAW_SUPP_EMAP_TSV
+        PROCESSED_FUNCATS,
 
 
 rule supp_tsvs:
