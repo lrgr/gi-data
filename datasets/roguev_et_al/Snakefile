@@ -106,5 +106,5 @@ rule all:
         DELETIONS_ONLY_EMAP, 
         HOMS_SC_SP, 
         HOMS_SP_SC, 
-        FUN_CAT_XLS
+        S4_TSV
 

@@ -32,8 +32,8 @@ def s3_homs(tsv, sc_sp, sp_sc):
     sc_sp_df = df[[_sc, _sp]]
     sp_sc_df = df[[_sp, _sc]]
 
-    sc_sp_df.to_csv(sc_sp, index=False, header=False)
-    sp_sc_df.to_csv(sp_sc, index=False, header=False)
+    sc_sp_df.to_csv(sc_sp, index=False, header=False, sep='\t')
+    sp_sc_df.to_csv(sp_sc, index=False, header=False, sep='\t')
 
     assert(sc_sp_df.shape == (239, 2))
     assert(sp_sc_df.shape == (239, 2))
