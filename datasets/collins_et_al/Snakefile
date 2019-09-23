@@ -7,17 +7,41 @@ RAW_DIR = join(OUTPUT_DIR, 'raw')
 RAW_DATA_ZIP = join(RAW_DIR,'collins2007_raw.zip')
 RAW_SUPP_DIR = join(RAW_DIR, 'collins_et_al_s2')
 RAW_SUPP_EMAP_TSV = join(RAW_SUPP_DIR, 'Chromosome biology EMAP data.txt')
+RAW_SUPP_FUNCATS_XLS = join(RAW_SUPP_DIR, 'Summary of mutations and genetic profiles.xls')
 
-PROCESSED_EMAP = join(OUTPUT_DIR, 'processed', 'collins_et_al-dels_only.cpkl')
+PROCESSED_DIR = join(OUTPUT_DIR, 'processed')
+PROCESSED_EMAP = join(PROCESSED_DIR, 'collins_et_al-dels_only.cpkl')
+PROCESSED_FUNCATS = join(PROCESSED_DIR, 'collins_et_al_gene_annotations.tsv')
 
-rule all:   
+rule all:
+    input:
+        PROCESSED_EMAP,
+        RAW_SUPP_EMAP_TSV
+
+
+rule supp_tsvs:
+    input:
+        xls = RAW_SUPP_FUNCATS_XLS,
+        script = 'parse_collins.py'
+    output:
+        PROCESSED_FUNCATS
+    shell:
+        """
+        python {input.script} xls-to-csv \
+            --input_xls '{input.xls}' \
+            --output {output} \
+            --usecols 4 \
+            --skiprows 3
+        """
+
+rule emap:   
     input:
         tsv=RAW_SUPP_EMAP_TSV,
-        script='parse_collins.py'
+        script= 'parse_collins.py'
     output:
         PROCESSED_EMAP
     shell:
-        "python {input.script} -i '{input.tsv}' -o {output}" #todo? rename the files so spaces aren't annoying?
+        "python {input.script} parse-emap -i '{input.tsv}' -o {output}" #todo? rename the files so spaces aren't annoying?
 
 rule unzip:
     input:
@@ -25,7 +49,8 @@ rule unzip:
     params:
         unzipped_folder = "'Supp data - strains and interaction data'"
     output:
-        RAW_SUPP_EMAP_TSV
+        RAW_SUPP_EMAP_TSV,
+        RAW_SUPP_FUNCATS_XLS
     shell:
         '''
         unzip {input} && \
@@ -39,3 +64,5 @@ rule download_raw_data:
         RAW_DATA_ZIP
     shell:
         'wget -O {output} {params.url}' 
+
+# ALL

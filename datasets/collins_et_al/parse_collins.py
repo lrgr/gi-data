@@ -5,11 +5,24 @@ from GIData.utils import sparsity
 
 import numpy as np
 
-@click.command()
+@click.group()
+def cli():
+    pass
+
+@cli.command()
+@click.option('-i', '--input_xls')
+@click.option('-o', '--output')
+@click.option('-c', '--usecols', type=int)
+@click.option('-s', '--skiprows', type=int)
+def xls_to_csv(input_xls, output, usecols, skiprows):
+    # TODO: refactor this out 
+    df = pd.read_excel(input_xls, usecols=range(usecols), skiprows=range(skiprows))
+    df.to_csv(output, sep='\t', index=False)
+
+@cli.command()
 @click.option('-i', '--input_emap')
 @click.option('-o', '--output')
-
-def parse_collins(input_emap, output):
+def parse_emap(input_emap, output):
     #Read raw data
     df = pd.read_csv(input_emap, sep ='\t',
                     header=None,
@@ -50,4 +63,4 @@ def parse_collins(input_emap, output):
     print('* Processed GIs sparsity:', sparsity(gis.values))
 
 if __name__ == '__main__':
-    parse_collins()
+    cli()

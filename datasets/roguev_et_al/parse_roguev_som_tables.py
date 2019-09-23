@@ -10,6 +10,7 @@ def cli():
 @click.option('-o', '--output')
 @click.option('-c', '--usecols', type=int)
 def xls_to_csv(input_xls, output, usecols):
+    # TODO: refactor this out 
     df = pd.read_excel(input_xls, usecols=range(usecols))
     df.to_csv(output, sep='\t', index=False)
 
