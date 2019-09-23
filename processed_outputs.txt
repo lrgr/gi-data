@@ -1,0 +1,8 @@
+outputs
+datasets/collins_et_al/output/processed/collins_et_al-dels_only.cpkl
+datasets/collins_et_al/output/processed/collins_et_al_gene_annotations.tsv
+datasets/roguev_et_al/output/processed/roguev_et_al-dels_only.cpkl
+datasets/roguev_et_al/output/processed/sc-sp-homs.tsv
+datasets/roguev_et_al/output/processed/sp-sc-homs.tsv
+datasets/roguev_et_al/output/processed/table_s3.tsv
+datasets/roguev_et_al/output/processed/table_s4.tsv
