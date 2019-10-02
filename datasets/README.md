@@ -1,8 +1,8 @@
 # Procesesd GI datasets
 
 ## Datasets:
-    - Collins et al. Nature 2007
-    - Roguev et al. Science 2008
+- Collins et al. Nature 2007
+- Roguev et al. Science 2008
 
 ## Usage:
 1. First build each dataset in respective directories
