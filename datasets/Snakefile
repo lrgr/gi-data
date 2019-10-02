@@ -21,7 +21,6 @@ rule meta:
     shell:
         '''
         git rev-parse HEAD > {output}
-        git describe --tags > {output}
         '''
 
 rule one_dataset:
