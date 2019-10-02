@@ -1,0 +1,62 @@
+from os.path import join
+
+# Processed datasets
+names = ['collins_et_al',
+         'roguev_et_al']
+
+output_dir = 'all_processed_datasets'
+PROCESSED_DIR_FMT = '{name}/output/processed'
+COLLECTED_DATASET_FMT = join(output_dir, '{name}')
+
+
+# Rules
+rule all:
+    input:
+        expand(COLLECTED_DATASET_FMT, name=names),
+        join(output_dir, 'meta.txt')
+
+rule meta:
+    output:
+        join(output_dir, 'meta.txt')
+    shell:
+        '''
+        git rev-parse HEAD > {output}
+        git describe --tags > {output}
+        '''
+
+rule one_dataset:
+    input:
+        PROCESSED_DIR_FMT
+    output:
+        directory(COLLECTED_DATASET_FMT)
+    shell:
+        '''
+        cp -r {input} {output}
+        '''
+
+# create md5 checksums
+rule list_outputs:
+    input:
+        expand(COLLECTED_DATASET_FMT, name=names)
+    output:
+        'all_processed_files.txt'
+    shell:
+        '''
+        echo outputs > {output}
+        ls -1 */output/processed/* >> {output}
+        ls -1 all_processed_datasets/*/* >> {output}
+        '''
+
+rule checksums:
+    input:
+        'all_processed_files.txt'
+    params:
+        'checksums.yml' # NB: do not make this an output, we want contract and verify to not depend on eachother....
+    shell:
+        'chacon create -i {input} -o {params}'
+
+rule verify:
+    input:
+        'checksums.yml'
+    shell:
+        'chacon verify -i {input}'
