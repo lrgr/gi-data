@@ -23,4 +23,4 @@ script:
   - cd GIData && python setup.py develop && cd ..
   - snakemake -d datasets/collins_et_al -s datasets/collins_et_al/Snakefile all
   - snakemake -d datasets/roguev_et_al -s datasets/roguev_et_al/Snakefile all
-  - chacon verify -i processed_file_md5_checksums.yml
+  - snakemake -d datasets -s datasets/Snakefile all verify

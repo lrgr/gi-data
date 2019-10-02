@@ -1,7 +1,0 @@
-datasets/collins_et_al/output/processed/collins_et_al-dels_only.cpkl: 212002b84bae26c06c64309a9e3afd79
-datasets/collins_et_al/output/processed/collins_et_al_gene_annotations.tsv: d4cfef36e318ddd9402fe4f5c1a92033
-datasets/roguev_et_al/output/processed/roguev_et_al-dels_only.cpkl: bfae7eaeec82fc32e41ef5c540614196
-datasets/roguev_et_al/output/processed/sc-sp-homs.tsv: 16323d85e537e626d53a88f6dec93b9c
-datasets/roguev_et_al/output/processed/sp-sc-homs.tsv: 674f3e8af7dd42e728c281377999eb28
-datasets/roguev_et_al/output/processed/table_s3.tsv: f8270809622d501282c023cd77b013a0
-datasets/roguev_et_al/output/processed/table_s4.tsv: 7023fb35882c22a10441788f91a5d012
