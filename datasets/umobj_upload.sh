@@ -22,3 +22,5 @@ done
 
 echo "Uploading metadata (git commit etc.) to ObjStore"
 cpobj all_processed_datasets/meta.txt lrgr:gi-data/$1/meta.txt
+cpobj all_processed_datasets/checksums.yml lrgr:gi-data/$1/checksums.txt
+cpobj all_processed_datasets/verify_result.yml lrgr:gi-data/$1/verify_result.txt

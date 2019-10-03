@@ -13,14 +13,22 @@ COLLECTED_DATASET_FMT = join(output_dir, '{name}')
 rule all:
     input:
         expand(COLLECTED_DATASET_FMT, name=names),
-        join(output_dir, 'meta.txt')
+        join(output_dir, 'meta.txt'),
+        join(output_dir, 'checksums.yml'),
+        join(output_dir, 'verify_result.yml')
+
+rule clean:
+    shell:
+        '''
+        rm -r {output_dir}
+        '''
 
 rule meta:
     output:
         join(output_dir, 'meta.txt')
     shell:
         '''
-        git rev-parse HEAD > {output}
+        git log -1 > {output}
         '''
 
 rule one_dataset:
@@ -57,5 +65,8 @@ rule checksums:
 rule verify:
     input:
         'checksums.yml'
+    output:
+        result=join(output_dir, 'verify_result.yml'),
+        checksums=join(output_dir, 'checksums.yml')
     shell:
-        'chacon verify -i {input}'
+        'chacon verify -i {input} > {output.result} && cp {input} {output.checksums}'
