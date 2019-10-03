@@ -1,7 +1,6 @@
 language: python
-python: # all the python 3 versions for fun!
+python: # would be surprised if python >3.7 fails... 
   - "3.6"      # current default Python on Travis CI
-  - "3.7"
 # command to install dependencies
 install:
   - sudo apt-get update
@@ -23,4 +22,5 @@ script:
   - cd GIData && python setup.py develop && cd ..
   - snakemake -d datasets/collins_et_al -s datasets/collins_et_al/Snakefile all
   - snakemake -d datasets/roguev_et_al -s datasets/roguev_et_al/Snakefile all
+  - snakemake -d datasets/costanzo_et_al_2010 -s datasets/costanzo_et_al_2010/Snakefile all
   - snakemake -d datasets -s datasets/Snakefile all verify

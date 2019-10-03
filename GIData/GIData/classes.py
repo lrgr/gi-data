@@ -11,7 +11,8 @@ class GIData(object):
                  cols,
                  row_meta=None,
                  col_meta=None,
-                 has_duplicates=False):
+                 has_duplicates=False,
+                 check_symmetric=True):
         assert all([gene.isupper() for gene in rows])
         assert all([gene.isupper() for gene in cols])
         
@@ -41,7 +42,7 @@ class GIData(object):
             assert self.no_duplicates(self.cols)
         
         self.has_duplicates = has_duplicates
-        self.is_symmetric = np.allclose(self.values, self.values.T, equal_nan=True)
+        self.is_symmetric = check_symmetric and np.allclose(self.values, self.values.T, equal_nan=True)
 
     
     @staticmethod
