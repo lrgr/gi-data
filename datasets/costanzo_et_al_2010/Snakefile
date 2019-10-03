@@ -1,0 +1,44 @@
+from os.path import join
+sys.path.append('..')
+DATA_URL = 'http://boonelab.ccbr.utoronto.ca/supplement/costanzo2009/sgadata_costanzo2009_rawdata_101120.txt.gz'
+SRC_DIR = 'src'
+PARSE_SCRIPT = join(SRC_DIR,'parse_costanzo2010.py')
+
+RAW_DIR = 'output/raw'
+RAW_DATA_GZ = join(RAW_DIR,'costanzo2010_raw.txt.gz')
+RAW_DATA_TXT = join(RAW_DIR,'costanzo2010_raw.txt')
+
+PROCESSED_DIR = 'output/processed'
+PROCESSED_DATA_FORMAT = join(PROCESSED_DIR,'costanzo2010-{}.cpkl')
+PROCESSED_DATA = PROCESSED_DATA_FORMAT.format('GI_score')
+LOG = join('output', 'log.txt')
+
+rule all:
+    input:
+        RAW_DATA_TXT,
+        PROCESSED_DATA,
+
+rule process_data:
+    input:
+        RAW_DATA_TXT
+    output:
+        PROCESSED_DATA
+    log:
+        LOG
+    shell:
+        '''
+        python parse_costanzo2010.py \
+        --input {input} \
+        --output_fmt {PROCESSED_DATA_FORMAT} > {log}
+        '''
+
+rule download_raw_data: 
+    params:
+        url = DATA_URL
+    output:
+        RAW_DATA_TXT
+    shell:
+        '''
+        wget -O {RAW_DATA_GZ} {params.url}
+        gzip -d {RAW_DATA_GZ}
+        '''

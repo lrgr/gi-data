@@ -14,5 +14,6 @@ dependencies:
   - pandas
   - xlrd # excel reader
   - cloudpickle
+  - jupyter
   - pip:
     - chacon

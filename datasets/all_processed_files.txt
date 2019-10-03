@@ -1,6 +1,15 @@
 outputs
 collins_et_al/output/processed/collins_et_al-dels_only.cpkl
 collins_et_al/output/processed/collins_et_al_gene_annotations.tsv
+costanzo_et_al_2010/output/processed/costanzo2010-GI_pval.cpkl
+costanzo_et_al_2010/output/processed/costanzo2010-GI_score.cpkl
+costanzo_et_al_2010/output/processed/costanzo2010-GI_std.cpkl
+costanzo_et_al_2010/output/processed/costanzo2010-array_SMF.cpkl
+costanzo_et_al_2010/output/processed/costanzo2010-array_SMF_std.cpkl
+costanzo_et_al_2010/output/processed/costanzo2010-double_mutant_fitness.cpkl
+costanzo_et_al_2010/output/processed/costanzo2010-double_mutant_fitness_std.cpkl
+costanzo_et_al_2010/output/processed/costanzo2010-query_SMF.cpkl
+costanzo_et_al_2010/output/processed/costanzo2010-query_SMF_std.cpkl
 roguev_et_al/output/processed/roguev_et_al-dels_only.cpkl
 roguev_et_al/output/processed/sc-sp-homs.tsv
 roguev_et_al/output/processed/sp-sc-homs.tsv
