@@ -13,7 +13,8 @@ rmobj -r $target
 
 for d in \
 collins_et_al \
-roguev_et_al
+roguev_et_al \
+costanzo_et_al_2010
 do
     echo "Copying $d to ObjStore"
     cpobj -r all_processed_datasets/$d lrgr:gi-data/$1
