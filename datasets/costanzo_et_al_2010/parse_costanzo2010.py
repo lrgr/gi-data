@@ -19,7 +19,7 @@ parser.add_argument('--with_cuttoffs', action='store_true')
 parser.add_argument('--GIs_only', action='store_true')
 parser.add_argument('--use_DAMP', action='store_true')
 parser.add_argument('--use_ts_genes', action='store_true')
-args=parser.parse_args(sys.argv[1:])
+args=parser.parse_args()
 
 if args.with_cuttoffs:
     '''
@@ -98,7 +98,7 @@ print()
 print(df.head())
 print()
 
-# Convert to square matrix
+# Convert to matrix
 df = df.pivot(index='Query ORF',columns='Array ORF')
 
 # Save each of the value types as seperate pickled matrices

@@ -3,7 +3,8 @@ from os.path import join
 # Processed datasets
 names = ['collins_et_al',
          'roguev_et_al',
-         'costanzo_et_al_2010']
+         'costanzo_et_al_2010',
+         'costanzo_et_al_2016']
 
 output_dir = 'all_processed_datasets'
 PROCESSED_DIR_FMT = '{name}/output/processed'
