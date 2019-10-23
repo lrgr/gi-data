@@ -28,6 +28,10 @@ roguev_et_al/output/processed/sc-sp-homs.tsv
 roguev_et_al/output/processed/sp-sc-homs.tsv
 roguev_et_al/output/processed/table_s3.tsv
 roguev_et_al/output/processed/table_s4.tsv
+ryan_et_al_2012/output/processed/ryan_2012_sc_merged_gis.cpkl
+ryan_et_al_2012/output/processed/ryan_2012_sc_merged_gis.log
+ryan_et_al_2012/output/processed/ryan_2012_sp_gis.cpkl
+ryan_et_al_2012/output/processed/ryan_2012_sp_gis.log
 all_processed_datasets/collins_et_al/collins_et_al-dels_only.cpkl
 all_processed_datasets/collins_et_al/collins_et_al_gene_annotations.tsv
 all_processed_datasets/costanzo_et_al_2010/costanzo2010-GI_pval.cpkl
@@ -57,3 +61,7 @@ all_processed_datasets/roguev_et_al/sc-sp-homs.tsv
 all_processed_datasets/roguev_et_al/sp-sc-homs.tsv
 all_processed_datasets/roguev_et_al/table_s3.tsv
 all_processed_datasets/roguev_et_al/table_s4.tsv
+all_processed_datasets/ryan_et_al_2012/ryan_2012_sc_merged_gis.cpkl
+all_processed_datasets/ryan_et_al_2012/ryan_2012_sc_merged_gis.log
+all_processed_datasets/ryan_et_al_2012/ryan_2012_sp_gis.cpkl
+all_processed_datasets/ryan_et_al_2012/ryan_2012_sp_gis.log
