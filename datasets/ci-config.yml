@@ -1,0 +1,7 @@
+datasets:
+  - 'collins_et_al'
+  - 'roguev_et_al'
+  - 'costanzo_et_al_2010'
+  - 'ryan_et_al_2012'
+checksums_file: ci-checkums.yml
+all_outputs: ci-all_processed_files.txt

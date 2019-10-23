@@ -1,0 +1,54 @@
+from os.path import join
+
+#data url
+DATA_URL = 'http://thecellmap.org/costanzo2016/data_files/Raw%20genetic%20interaction%20datasets:%20Pair-wise%20interaction%20format.zip'
+
+OUTPUT_DIR = 'output'
+RAW_DIR = join(OUTPUT_DIR, 'raw')
+
+RAW_DATA_ZIP = join(RAW_DIR,'costanzo_2016_raw.zip')
+RAW_GI_ExE = join(RAW_DIR,'SGA_ExE.txt')
+#RAW_GI_NxN_shuf = join(RAW_DIR,'SGA_NXN_shuf.txt')
+RAW_GI_NxN = join(RAW_DIR,'SGA_NxN.txt')
+
+PROCESSED_DIR = join(OUTPUT_DIR, 'processed')
+OUTPUT_FMT = join(PROCESSED_DIR, 'costanzo_et_al_2016-{}-{}.cpkl')
+GI_SCORES = OUTPUT_FMT.format('GI_score', 'DMA30')
+LOG = join(PROCESSED_DIR, 'log.txt')
+
+rule all:
+    input:
+        script = 'parse_costanzo2016.py',
+        gis = RAW_GI_NxN
+    output:
+        GI_SCORES
+    params:
+        fmt=OUTPUT_FMT
+    log:
+        LOG
+    shell:
+        '''
+        python {input.script} --input {input.gis} --output_fmt {params.fmt} > {log}
+        '''
+
+rule extract_gi_data:
+    input:
+        RAW_DATA_ZIP
+    output:
+        RAW_GI_NxN,
+        RAW_GI_ExE
+    params:
+        unzipped_folder = 'Data File S1. Raw genetic interaction datasets: Pair-wise interaction format'
+    shell:
+        '''
+        unzip {input} && \
+        mv "{params.unzipped_folder}"/* {RAW_DIR}/. && \
+        rmdir "{params.unzipped_folder}"
+        '''
+rule download_raw_data:
+    params:
+        url=DATA_URL
+    output:
+        RAW_DATA_ZIP
+    shell:
+        'wget -O {output} {params.url}'

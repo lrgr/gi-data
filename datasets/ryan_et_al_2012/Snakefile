@@ -1,0 +1,87 @@
+from os.path import join
+
+#data url
+EMAP_URL = 'https://ars.els-cdn.com/content/image/1-s2.0-S1097276512004443-mmc5.zip'
+SC_URL = 'https://ars.els-cdn.com/content/image/1-s2.0-S1097276512004443-mmc7.zip'
+
+OUTPUT_DIR = 'output'
+
+RAW_DIR = join(OUTPUT_DIR, 'raw')
+RAW_EMAP_ZIP = join(RAW_DIR,'ryan_2012_averaged_EMAP.zip')
+RAW_SC_ZIP = join(RAW_DIR, 'ryan_2012_merged_sc_gis.zip')
+SC_MERGED_SCORES_RAW = join(RAW_DIR,'ryan_2012_merged_sc_gis.tsv')
+SP_EMAP_RAW = join(RAW_DIR,'ryan_2012_sp_averaged_EMAP.tsv')
+
+PROCESSED_DIR = join(OUTPUT_DIR, 'processed')
+SP_EMAP = join(PROCESSED_DIR, 'ryan_2012_sp_gis.cpkl')
+SP_EMAP_LOG = join(PROCESSED_DIR, 'ryan_2012_sp_gis.log')
+
+SC_MERGED = join(PROCESSED_DIR, 'ryan_2012_sc_merged_gis.cpkl')
+SC_MERGED_LOG = join(PROCESSED_DIR, 'ryan_2012_sc_merged_gis.log')
+
+rule all:
+    input:
+        SC_MERGED,
+        SP_EMAP
+
+rule sc_merged:
+    input:
+        src='parse_ryan2012.py',
+        gis=SC_MERGED_SCORES_RAW
+    output:
+        SC_MERGED
+    log:
+        SC_MERGED_LOG
+    shell:
+        '''
+        python {input.src} \
+            --input_emap {input.gis} \
+            --output {output} \
+            --map_from YLR176 \
+            --map_to YLR176C \
+            --verbose | tee {log}
+        '''
+
+
+rule sp_emap:
+    input:
+        src='parse_ryan2012.py',
+        gis=SP_EMAP_RAW
+    output:
+        SP_EMAP
+    log:
+        SP_EMAP_LOG
+    shell:
+        '''
+        python {input.src} --input_emap {input.gis} --output {output} | tee {log}
+        '''
+
+rule unzip:
+    input:
+        sp=RAW_EMAP_ZIP,
+        sc=RAW_SC_ZIP,
+    output:
+        sp = SP_EMAP_RAW,
+        sc = SC_MERGED_SCORES_RAW
+    shell:
+        '''
+        unzip -p {input.sp} > {output.sp} && \
+        unzip -p {input.sc} > {output.sc}
+        '''
+
+
+rule download:
+    params:
+        emap_url = EMAP_URL,
+        sc_url   = SC_URL
+    output:
+        sp = RAW_EMAP_ZIP,
+        sc = RAW_SC_ZIP
+    shell:
+        'wget -O {output.sp} {params.emap_url} && wget -O {output.sc} {params.sc_url} '
+
+rule clean:
+    shell:
+        '''
+        rm -r output
+        '''

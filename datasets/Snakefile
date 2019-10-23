@@ -1,9 +1,15 @@
 from os.path import join
 
 # Processed datasets
-names = ['collins_et_al',
-         'roguev_et_al',
-         'costanzo_et_al_2010']
+default_names = ['collins_et_al',
+                 'roguev_et_al',
+                 'costanzo_et_al_2010',
+                 'costanzo_et_al_2016',
+                 'ryan_et_al_2012']
+
+names = config.get('datasets', default_names)
+checksums_file = config.get('checksums_file', 'checksums.yml')
+all_processed_files = config.get('all_outputs', 'all_processed_files.txt')
 
 output_dir = 'all_processed_datasets'
 PROCESSED_DIR_FMT = '{name}/output/processed'
@@ -11,11 +17,15 @@ COLLECTED_DATASET_FMT = join(output_dir, '{name}')
 
 
 # Rules
+rule all_no_verify:
+    input:
+        expand(COLLECTED_DATASET_FMT, name=names),
+        join(output_dir, 'meta.txt'),
+
 rule all:
     input:
         expand(COLLECTED_DATASET_FMT, name=names),
         join(output_dir, 'meta.txt'),
-        join(output_dir, 'checksums.yml'),
         join(output_dir, 'verify_result.yml')
 
 rule clean:
@@ -47,7 +57,7 @@ rule list_outputs:
     input:
         expand(COLLECTED_DATASET_FMT, name=names)
     output:
-        'all_processed_files.txt'
+        all_processed_files
     shell:
         '''
         echo outputs > {output}
@@ -55,19 +65,20 @@ rule list_outputs:
         ls -1 all_processed_datasets/*/* >> {output}
         '''
 
-rule checksums:
+rule create_checksums:
     input:
-        'all_processed_files.txt'
+        all_processed_files
     params:
-        'checksums.yml' # NB: do not make this an output, we want contract and verify to not depend on eachother....
+        checksums_file # NB: do not make this an output, we want contract and verify to not depend on eachother....
     shell:
         'chacon create -i {input} -o {params}'
 
 rule verify:
     input:
-        'checksums.yml'
+        checksums=checksums_file,
+        dirs=expand(COLLECTED_DATASET_FMT, name=names),
     output:
         result=join(output_dir, 'verify_result.yml'),
         checksums=join(output_dir, 'checksums.yml')
     shell:
-        'chacon verify -i {input} > {output.result} && cp {input} {output.checksums}'
+        'chacon verify -i {input.checksums} > {output.result} && cp {input.checksums} {output.checksums}'
