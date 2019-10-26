@@ -15,7 +15,8 @@ for d in \
 collins_et_al \
 roguev_et_al \
 costanzo_et_al_2010 \
-costanzo_et_al_2016
+costanzo_et_al_2016 \
+ryan_et_al_2012
 do
     echo "Copying $d to ObjStore"
     cpobj -r all_processed_datasets/$d lrgr:gi-data/$1
