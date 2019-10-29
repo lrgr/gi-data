@@ -21,7 +21,16 @@ def mwm_homs(homs, ls, rs):
             edgelist.append((l,r))
     
     G = nx.from_edgelist(edgelist)
-    return nx.maximal_matching(G)
+    _hs = nx.maximal_matching(G)
+    hs = []
+    for pair in _hs:
+        if pair[0] in rs and pair[1] in ls:
+            hs.append((pair[1], pair[0]))
+        elif pair[1] in rs and pair[0] in ls:
+            hs.append(pair)
+        else:
+            assert False, "We shouldn't have this case..."
+    return hs
 
 def load_gis(fp):
     with open(fp, 'rb') as f:
