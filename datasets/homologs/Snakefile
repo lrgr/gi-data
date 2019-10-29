@@ -1,0 +1,66 @@
+from os.path import join
+output_dir = 'output'
+raw_dir = join(output_dir, 'raw')
+pombase_hom_file_raw = join(raw_dir, 'pombase_homologs.tsv')
+pombase_hom_url = 'ftp://ftp.pombase.org/pombe/orthologs/cerevisiae-orthologs.txt'
+
+processed_dir = join(output_dir, 'processed')
+pombase_homs = join(processed_dir, 'pombase_many_to_many_homs.tsv')
+
+SP = config['sp_dataset']
+SC = config['sc_dataset']
+axes = ['rows', 'cols']
+dataset_dir = join(processed_dir, '{sp}_{sc}'.format(sp=SP, sc=SC))
+
+hom_file_template = join(dataset_dir, '{l}-{l_axis}_{r}-{r_axis}_homologs.tsv')
+
+sp_sc_homs = expand(hom_file_template, 
+                    l=SP, l_axis=axes, r=SC, r_axis=axes)
+sc_sp_homs = expand(hom_file_template, 
+                    l=SC, l_axis=axes, r=SP, r_axis=axes)
+
+rule get_one_to_one_homs:
+    output:
+        sp_sc_homs, sc_sp_homs
+    input:
+        src='get_one_to_one_homs.py',
+        homs=pombase_homs,
+        l_gis = config['sp_gi_fp'],
+        r_gis = config['sc_gi_fp']
+    params:
+        l_name = SP,
+        r_name = SC,
+        fmt = lambda w: hom_file_template #avoid wildcard expansion!
+    shell:
+        '''
+        python {input.src} \
+            --left_gis {input.l_gis} \
+            --left_name {params.l_name} \
+            --right_gis {input.r_gis} \
+            --right_name {params.r_name} \
+            --homologs {input.homs} \
+            --output_fmt {params.fmt}
+        '''
+
+
+
+rule pombase_many_to_many:
+    input:
+        raw=pombase_hom_file_raw,
+        src='parse_pombase_homologs.py'
+    output:
+        pombase_homs
+    shell:
+        '''
+        python {input.src} -i {input.raw} -o {output}
+        '''
+
+rule pombase_raw_hom:
+    output:
+        pombase_hom_file_raw
+    params:
+        pombase_hom_url
+    shell:
+        '''
+        wget -O {output} {params}
+        '''

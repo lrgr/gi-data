@@ -1,0 +1,4 @@
+sp_dataset: ryan12
+sp_gi_fp: ../ryan_et_al_2012/output/processed/ryan_2012_sp_gis.cpkl
+sc_dataset: costanzo10
+sc_gi_fp: ../costanzo_et_al_2010/output/processed/costanzo2010-GI_pval.cpkl

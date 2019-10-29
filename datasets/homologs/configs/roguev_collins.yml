@@ -1,0 +1,4 @@
+sp_dataset: roguev
+sp_gi_fp: ../roguev_et_al/output/processed/roguev_et_al-dels_only.cpkl
+sc_dataset: collins
+sc_gi_fp: ../collins_et_al/output/processed/collins_et_al-dels_only.cpkl

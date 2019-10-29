@@ -24,4 +24,6 @@ script:
   - snakemake -d datasets/roguev_et_al -s datasets/roguev_et_al/Snakefile all
   - snakemake -d datasets/costanzo_et_al_2010 -s datasets/costanzo_et_al_2010/Snakefile all
   - snakemake -d datasets/ryan_et_al_2012 -s datasets/ryan_et_al_2012/Snakefile all
+  - snakemake -d datasets/homologs -s datasets/homologs/Snakefile --configfile datasets/homologs/configs/ryan_costanzo10.yml
+  - snakemake -d datasets/homologs -s datasets/homologs/Snakefile --configfile datasets/homologs/configs/roguev_collins.yml
   - snakemake -d datasets -s datasets/Snakefile all verify --configfile datasets/ci-config.yml
