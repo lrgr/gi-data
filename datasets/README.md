@@ -16,7 +16,7 @@ Processed GI datasets:
 - Costanzo et al. Science 2016
 - Ryan et al. Molecular Cell 2012
 
-## Build data from source (i.e. maintainers)
+## 3. Build data from source (i.e. maintainers)
 1. First build each dataset in respective directories
 2. Run `snakemake all` to collect all datasets for release/upload
 3. Run `snakemake verify` to verify built files against committed md5 checksums
