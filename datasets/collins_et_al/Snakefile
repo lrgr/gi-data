@@ -1,7 +1,6 @@
 from os.path import join
 
-DATA_URL = 'https://www.nature.com/nature/journal/v446/n7137/extref/nature05649-s2.zip'
-
+DATA_URL = 'https://static-content.springer.com/esm/art%3A10.1038%2Fnature05649/MediaObjects/41586_2007_BFnature05649_MOESM264_ESM.zip'
 OUTPUT_DIR = 'output'
 RAW_DIR = join(OUTPUT_DIR, 'raw')
 RAW_DATA_ZIP = join(RAW_DIR,'collins2007_raw.zip')
