@@ -4,12 +4,12 @@ Genetic Interaction datasets for various species. Datasets are processed taking 
 
 ## 1. Usage
 
-We recommend users download data from static links provided in the provided annotated YAML. (Datasets can be downloaded as in [INSERT REPO HERE example.]. Unless specified otherwise, data is serialized and stored with cloudpickle (See example for usage).
+We recommend users download data from static links provided in the provided YAML in `/example`. (Datasets can be downloaded as in `/example`. Unless specified otherwise, data is serialized and stored with cloudpickle (See example for usage).
 
 For maintainers and advanced user, see 3. to build data from source.
 
 ## 2. General information
-Processed datasets:
+Processed GI datasets:
 - Collins et al. Nature 2007
 - Roguev et al. Science 2008
 - Costanzo et al. Science 2010
