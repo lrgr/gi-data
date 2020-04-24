@@ -1,0 +1,100 @@
+from os.path import join
+
+dcell_preds_url = 'http://chianti.ucsd.edu/~kono/ci/data/deep-cell/predictions/prediction.tar.gz'
+onto_preds_url = 'https://www.cell.com/cms/10.1016/j.cels.2016.02.003/attachment/0bcd9b3c-1733-4694-bbaf-8ca8a188627f/mmc7.zip'
+
+OUTPUT_DIR = 'output'
+RAW_DIR = join(OUTPUT_DIR, 'raw')
+PROCESSED_DIR = join(OUTPUT_DIR, 'processed')
+
+ONTO_ZIP = join(RAW_DIR, 'ontotype_preds.zip')
+ONTO_TSV = join(RAW_DIR, 'ontotype_preds.tsv')
+
+DCELL_TAR = join(RAW_DIR, 'dcell_preds.tar.gz')
+DCELL_DIR = join(RAW_DIR, 'dcell_preds')
+
+DCELL_TSV = join(DCELL_DIR, 'costanzo_2009_GI_predictions/costonzo_2009_all_prediction')
+
+
+rule download_onto:
+    output:
+        onto_zip = ONTO_ZIP
+    shell: 
+        '''
+        wget -O {output.onto_zip} {onto_preds_url}
+        '''
+
+rule unzip_onto:
+    input:
+        ONTO_ZIP
+    output:
+        ONTO_TSV
+    shell:
+        '''
+        unzip {input}
+        mv pairwise_interactions.txt {output}
+        '''
+
+rule download_dcell:
+    output:
+        DCELL_TAR
+    shell:
+        '''
+        wget -O {output} {dcell_preds_url}
+        '''
+
+rule unzip_dcell:
+    input:
+        DCELL_TAR
+    output:
+        folder=directory(DCELL_DIR),
+        # tsv=DCELL_TSV
+    shell:
+        '''
+        tar -xvzf output/raw/dcell_preds.tar.gz
+        mv predictions {output.folder}
+        '''
+
+output_fmt=join(PROCESSED_DIR, 'dcell-onto-data_{}.cpkl')
+merged_tsv_output=join(PROCESSED_DIR, 'dcell-onto-data.tsv')
+
+rule process:
+    input:
+        dcell=DCELL_TSV,
+        onto=ONTO_TSV,
+        dummy=DCELL_DIR # hack to link rules...
+    output:
+        merged_tsv_output
+    shell:
+        '''
+        python process_dcell_onto_preds.py \
+            --dcell_fp {input.dcell} \
+            --onto_fp {input.onto} \
+            --costanzo_2010_fp ../costanzo_et_al_2010/output/processed/costanzo2010-GI_score.cpkl \
+            --tsv_output {merged_tsv_output} \
+            --cpkl_output_fmt {output_fmt}
+        '''
+merged_scores = join(PROCESSED_DIR, 'dcell_costanzo_merged_scores.cpkl')
+merged_pvals = join(PROCESSED_DIR, 'dcell_costanzo_merged_pvals.cpkl')
+merged_dcell_only_mask = join(PROCESSED_DIR, 'dcell_costanzo_merged_dcell_only_mask.cpkl')
+rule merge:
+    input:
+        dcell_onto_scores  = output_fmt.format('true'),
+        dcell_onto_pvals   = output_fmt.format('p'),
+        costanzo_scores  = '../costanzo_et_al_2010/output/processed/costanzo2010-GI_score.cpkl',
+        costanzo_pvals   = '../costanzo_et_al_2010/output/processed/costanzo2010-GI_pval.cpkl',
+    output:
+        scores = merged_scores,
+        pvals = merged_pvals,
+        mask  = merged_dcell_only_mask
+    shell:
+        '''
+        python merge_dcell_and_costanzo_data.py \
+            --dcell_onto_scores {input.dcell_onto_scores} \
+            --dcell_onto_pvals  {input.dcell_onto_pvals} \
+            --costanzo10_scores {input.costanzo_scores} \
+            --costanzo10_pvals {input.costanzo_pvals} \
+            --scores_output {output.scores} \
+            --pvals_output {output.pvals} \
+            --mask_output  {output.mask}
+        '''

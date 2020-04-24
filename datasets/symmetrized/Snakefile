@@ -1,0 +1,48 @@
+from os.path import join
+
+COSTANZO_10 = 'costanzo_et_al_2010'
+RYAN_12 = 'ryan_et_al_2012'
+DCELL = 'dcell_data'
+
+datasets = \
+    {
+        COSTANZO_10: {
+            'gis': '../costanzo_et_al_2010/output/processed/costanzo2010-GI_score.cpkl',
+            'pvals': '../costanzo_et_al_2010/output/processed/costanzo2010-GI_pval.cpkl'
+        },
+        RYAN_12: {
+            'gis': '../ryan_et_al_2012/output/processed/ryan_2012_sp_gis.cpkl'
+        },
+        DCELL: {
+            'gis': '../dcell_and_ontotype/output/processed/dcell-onto-data_true.cpkl',
+            'pvals': '../dcell_and_ontotype/output/processed/dcell-onto-data_p.cpkl'
+        }
+    }
+
+OUTPUT_DIR = join('output', 'processed')
+
+GI_FMT = join(OUTPUT_DIR, '{name}-GI_score.cpkl')
+PVALS_FMT = join(OUTPUT_DIR, '{name}-p_vals.cpkl')
+
+rule all:
+    input:
+        expand(GI_FMT, name=[COSTANZO_10, RYAN_12, DCELL])
+
+rule sym:
+    output:
+        gis = GI_FMT,
+    input:
+        gis = lambda w: datasets[w['name']]['gis'],
+    params:
+        pvals_in = lambda w: '--pvals {}'.format(datasets[w['name']]['pvals']) 
+                            if datasets[w['name']].get('pvals') else '',
+        pvals_out = lambda w: '--pvals_output {}'.format(PVALS_FMT.format(name=w['name'])) 
+                            if datasets[w['name']].get('pvals') else '' 
+
+    shell:
+        '''
+        python symmetrize.py \
+            --gis {input.gis} \
+            --gis_output {output.gis} \
+            {params.pvals_in} {params.pvals_out}
+        '''

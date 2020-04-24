@@ -9,6 +9,7 @@ RAW_DATA_GZ = join(RAW_DIR,'costanzo2010_raw.txt.gz')
 RAW_DATA_TXT = join(RAW_DIR,'costanzo2010_raw.txt')
 
 PROCESSED_DIR = 'output/processed'
+PROCESSED_DATA_TSV = join(PROCESSED_DIR, 'costanzo2010-processed.tsv')
 PROCESSED_DATA_FORMAT = join(PROCESSED_DIR,'costanzo2010-{}.cpkl')
 PROCESSED_DATA = PROCESSED_DATA_FORMAT.format('GI_score')
 LOG = join('output', 'log.txt')
@@ -22,7 +23,8 @@ rule process_data:
     input:
         RAW_DATA_TXT
     output:
-        PROCESSED_DATA
+        scores = PROCESSED_DATA,
+        tsv = PROCESSED_DATA_TSV
     log:
         LOG
     shell:

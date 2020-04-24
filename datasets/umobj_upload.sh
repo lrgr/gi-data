@@ -17,6 +17,7 @@ roguev_et_al \
 costanzo_et_al_2010 \
 costanzo_et_al_2016 \
 ryan_et_al_2012 \
+symmetrized \
 homologs
 do
     echo "Copying $d to ObjStore"
