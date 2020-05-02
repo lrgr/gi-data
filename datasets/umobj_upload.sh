@@ -17,6 +17,7 @@ roguev_et_al \
 costanzo_et_al_2010 \
 costanzo_et_al_2016 \
 ryan_et_al_2012 \
+dcell_and_ontotype \
 symmetrized \
 homologs
 do
